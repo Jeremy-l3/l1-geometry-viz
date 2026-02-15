@@ -125,7 +125,7 @@ function App() {
           L1 Geometry Visualizer
         </h1>
         <p className="text-white/50 text-sm">
-          Phase 4: Animated Contraction Icons & Cross-Highlight
+          Sample Version Complete
         </p>
       </header>
 

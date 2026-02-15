@@ -12,8 +12,15 @@
  */
 
 import { useMemo } from 'react'
+import { motion } from 'framer-motion'
 import type { PentadicProfile } from '../../data/synthetic/types'
+import type { PentadicDimension } from '../../data/mappings/invariantPentadicMap'
 import { computeGlyphGeometry, type GlyphConfig } from '../../lib/glyph-geometry'
+
+export interface DimensionHighlight {
+  dimension: PentadicDimension
+  strength: number // 0-1
+}
 
 export interface RiskGlyphProps {
   /** The pentadic profile to visualize */
@@ -26,6 +33,17 @@ export interface RiskGlyphProps {
   showGlow?: boolean
   /** Scale factor (1 = default size) */
   scale?: number
+  /** Dimensions to highlight (for cross-highlight on hover) */
+  highlights?: DimensionHighlight[]
+}
+
+// Highlight colors for each dimension
+const HIGHLIGHT_COLORS: Record<PentadicDimension, string> = {
+  uncertainty: '#94a3b8',
+  severity: '#f87171',
+  scope: '#fbbf24',
+  correlation: '#fb923c',
+  containment: '#34d399',
 }
 
 export function RiskGlyph({
@@ -34,6 +52,7 @@ export function RiskGlyph({
   className = '',
   showGlow = true,
   scale = 1,
+  highlights = [],
 }: RiskGlyphProps) {
   const geometry = useMemo(
     () => computeGlyphGeometry(profile, config),
@@ -46,8 +65,10 @@ export function RiskGlyph({
   const glowBlur = geometry.glowBlur * scale
   const glowSpread = geometry.glowSpread * scale
 
-  // SVG viewBox with padding for glow
-  const padding = showGlow ? Math.max(glowBlur + glowSpread, 20) : 10
+  // SVG viewBox with padding for glow and highlights
+  const basePadding = showGlow ? Math.max(glowBlur + glowSpread, 20) : 10
+  const highlightPadding = highlights.length > 0 ? 15 : 0
+  const padding = basePadding + highlightPadding
   const viewBoxWidth = width + padding * 2
   const viewBoxHeight = height + padding * 2
 
@@ -56,6 +77,18 @@ export function RiskGlyph({
     () => `glow-${Math.random().toString(36).substring(2, 9)}`,
     []
   )
+
+  // Get highlight for a dimension
+  const getHighlight = (dim: PentadicDimension) =>
+    highlights.find((h) => h.dimension === dim)
+
+  const severityHighlight = getHighlight('severity')
+  const scopeHighlight = getHighlight('scope')
+  const correlationHighlight = getHighlight('correlation')
+  const containmentHighlight = getHighlight('containment')
+  const uncertaintyHighlight = getHighlight('uncertainty')
+
+  const hasAnyHighlight = highlights.length > 0
 
   return (
     <svg
@@ -125,6 +158,103 @@ export function RiskGlyph({
         </linearGradient>
       </defs>
 
+      {/* Severity highlight - vertical bars on sides */}
+      {severityHighlight && (
+        <motion.g
+          initial={{ opacity: 0 }}
+          animate={{ opacity: severityHighlight.strength }}
+          transition={{ duration: 0.2 }}
+        >
+          <rect
+            x={padding - 8}
+            y={padding}
+            width={4}
+            height={height}
+            rx={2}
+            fill={HIGHLIGHT_COLORS.severity}
+            opacity={0.6}
+          />
+          <rect
+            x={padding + width + 4}
+            y={padding}
+            width={4}
+            height={height}
+            rx={2}
+            fill={HIGHLIGHT_COLORS.severity}
+            opacity={0.6}
+          />
+          {/* Height arrows */}
+          <text
+            x={padding - 10}
+            y={padding + height / 2}
+            fontSize={10}
+            fill={HIGHLIGHT_COLORS.severity}
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            ↕
+          </text>
+        </motion.g>
+      )}
+
+      {/* Scope highlight - horizontal bars on top/bottom */}
+      {scopeHighlight && (
+        <motion.g
+          initial={{ opacity: 0 }}
+          animate={{ opacity: scopeHighlight.strength }}
+          transition={{ duration: 0.2 }}
+        >
+          <rect
+            x={padding}
+            y={padding - 8}
+            width={width}
+            height={4}
+            rx={2}
+            fill={HIGHLIGHT_COLORS.scope}
+            opacity={0.6}
+          />
+          <rect
+            x={padding}
+            y={padding + height + 4}
+            width={width}
+            height={4}
+            rx={2}
+            fill={HIGHLIGHT_COLORS.scope}
+            opacity={0.6}
+          />
+          {/* Width arrows */}
+          <text
+            x={padding + width / 2}
+            y={padding - 10}
+            fontSize={10}
+            fill={HIGHLIGHT_COLORS.scope}
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            ↔
+          </text>
+        </motion.g>
+      )}
+
+      {/* Correlation highlight - pulsing border effect */}
+      {correlationHighlight && (
+        <motion.rect
+          x={padding - 3}
+          y={padding - 3}
+          width={width + 6}
+          height={height + 6}
+          rx={6}
+          fill="none"
+          stroke={HIGHLIGHT_COLORS.correlation}
+          strokeWidth={2}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0.4, 0.8, 0.4].map((v) => v * correlationHighlight.strength),
+          }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+      )}
+
       {/* Outer glow layer (separate for better effect) */}
       {showGlow && geometry.glowBlur > 0 && (
         <rect
@@ -158,6 +288,23 @@ export function RiskGlyph({
         filter={showGlow && geometry.glowBlur > 0 ? `url(#${filterId})` : undefined}
       />
 
+      {/* Containment highlight - inner fill pulse */}
+      {containmentHighlight && (
+        <motion.rect
+          x={padding + 4}
+          y={padding + 4}
+          width={width - 8}
+          height={height - 8}
+          rx={2}
+          fill={HIGHLIGHT_COLORS.containment}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0.1, 0.3, 0.1].map((v) => v * containmentHighlight.strength),
+          }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+      )}
+
       {/* Inner highlight (suggests internal structure) */}
       <rect
         x={padding + width * 0.15}
@@ -169,6 +316,58 @@ export function RiskGlyph({
         fill="white"
         opacity={geometry.fillOpacity * 0.08}
       />
+
+      {/* Uncertainty highlight - position indicator */}
+      {uncertaintyHighlight && (
+        <motion.g
+          initial={{ opacity: 0 }}
+          animate={{ opacity: uncertaintyHighlight.strength }}
+          transition={{ duration: 0.2 }}
+        >
+          <line
+            x1={padding + width / 2}
+            y1={padding + height + 10}
+            x2={padding + width / 2}
+            y2={padding + height + 18}
+            stroke={HIGHLIGHT_COLORS.uncertainty}
+            strokeWidth={2}
+          />
+          <circle
+            cx={padding + width / 2}
+            cy={padding + height + 22}
+            r={4}
+            fill={HIGHLIGHT_COLORS.uncertainty}
+            opacity={0.6}
+          />
+          <text
+            x={padding + width / 2}
+            y={padding + height + 32}
+            fontSize={8}
+            fill={HIGHLIGHT_COLORS.uncertainty}
+            textAnchor="middle"
+          >
+            U
+          </text>
+        </motion.g>
+      )}
+
+      {/* Highlight legend when any highlight is active */}
+      {hasAnyHighlight && (
+        <g transform={`translate(${viewBoxWidth - 10}, 10)`}>
+          {highlights.map((h, i) => (
+            <motion.circle
+              key={h.dimension}
+              cx={0}
+              cy={i * 10}
+              r={3}
+              fill={HIGHLIGHT_COLORS[h.dimension]}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: i * 0.05 }}
+            />
+          ))}
+        </g>
+      )}
     </svg>
   )
 }

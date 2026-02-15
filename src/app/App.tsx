@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { RiskGlyph } from '../components/glyph/RiskGlyph'
+import { useState, useCallback, useMemo } from 'react'
+import { RiskGlyph, type DimensionHighlight } from '../components/glyph/RiskGlyph'
 import { Timeline, type TimelineMode } from '../components/timeline'
 import { PlaybackControls } from '../components/playback'
 import { TrajectoryBadge, TrajectoryPanel } from '../components/trajectory'
@@ -12,9 +12,10 @@ import {
   systemBeta,
   systemGamma,
 } from '../data/synthetic/systems'
-import { systemSubscores } from '../data/synthetic/subscores'
+import { systemSubscores, type Subscore } from '../data/synthetic/subscores'
 import type { PentadicProfile, SystemData } from '../data/synthetic/types'
 import type { PentadicDimension, Invariant } from '../data/mappings/invariantPentadicMap'
+import { invariantPentadicMap, contributionValues } from '../data/mappings/invariantPentadicMap'
 
 const systems: SystemData[] = [systemAlpha, systemBeta, systemGamma]
 
@@ -38,6 +39,9 @@ function App() {
   const [comparisonDayA, setComparisonDayA] = useState(0)
   const [comparisonDayB, setComparisonDayB] = useState(89)
 
+  // Cross-highlight state for subscore hover
+  const [hoveredSubscore, setHoveredSubscore] = useState<Subscore | null>(null)
+
   // Derived state
   const selectedSystem = systems.find((s) => s.id === selectedSystemId) ?? systemAlpha
   const currentProfile = selectedSystem.pentadicTimeSeries[currentDay]
@@ -46,6 +50,39 @@ function App() {
   // Explainer context based on drill-down level
   const explainerContext: ExplainerContext =
     selectedInvariant ? 'subscore' : selectedDimension ? 'invariant' : 'glyph'
+
+  // Compute glyph highlights from hovered subscore
+  const glyphHighlights = useMemo((): DimensionHighlight[] => {
+    if (!hoveredSubscore) return []
+
+    const highlights: DimensionHighlight[] = []
+    const allInvariants = [
+      hoveredSubscore.primaryInvariant,
+      ...(hoveredSubscore.secondaryInvariants || []),
+    ]
+
+    const dimensions: PentadicDimension[] = [
+      'uncertainty',
+      'severity',
+      'scope',
+      'correlation',
+      'containment',
+    ]
+
+    // Aggregate contributions from all invariants this subscore feeds
+    for (const dim of dimensions) {
+      let maxStrength = 0
+      for (const inv of allInvariants) {
+        const strength = contributionValues[invariantPentadicMap[inv][dim]]
+        maxStrength = Math.max(maxStrength, strength)
+      }
+      if (maxStrength >= 0.5) {
+        highlights.push({ dimension: dim, strength: maxStrength })
+      }
+    }
+
+    return highlights
+  }, [hoveredSubscore])
 
   // Handlers
   const handleDayChange = useCallback((day: number) => {
@@ -88,7 +125,7 @@ function App() {
           L1 Geometry Visualizer
         </h1>
         <p className="text-white/50 text-sm">
-          Phase 3: Drill-Down Layers & Snapshot Comparison
+          Phase 4: Animated Contraction Icons & Cross-Highlight
         </p>
       </header>
 
@@ -169,6 +206,7 @@ function App() {
                 profile={currentProfile}
                 selectedDimension={selectedDimension}
                 onDimensionClick={handleDimensionClick}
+                highlights={glyphHighlights}
               />
 
               {/* Trajectory panel */}
@@ -239,6 +277,7 @@ function App() {
                   onInvariantSelect={handleInvariantSelect}
                   onBackToGlyph={handleBackToGlyph}
                   onBackToInvariants={handleBackToInvariants}
+                  onSubscoreHover={setHoveredSubscore}
                 />
               )}
 
@@ -298,11 +337,13 @@ function InteractiveGlyphCard({
   profile,
   selectedDimension,
   onDimensionClick,
+  highlights = [],
 }: {
   system: SystemData
   profile: PentadicProfile
   selectedDimension: PentadicDimension | null
   onDimensionClick: (dim: PentadicDimension) => void
+  highlights?: DimensionHighlight[]
 }) {
   const dimensions: { key: PentadicDimension; label: string; color: string }[] = [
     { key: 'uncertainty', label: 'U', color: '#94a3b8' },
@@ -315,7 +356,7 @@ function InteractiveGlyphCard({
   return (
     <div className="bg-void-light rounded-lg p-6">
       <div className="flex flex-col items-center">
-        <RiskGlyph profile={profile} className="mb-4" />
+        <RiskGlyph profile={profile} className="mb-4" highlights={highlights} />
         <div className="text-center mb-4">
           <div className="text-white/80 font-medium text-lg">
             System {system.id === 'alpha' ? 'α' : system.id === 'beta' ? 'β' : 'γ'}
@@ -363,6 +404,7 @@ function DrillDownPanel({
   onInvariantSelect,
   onBackToGlyph,
   onBackToInvariants,
+  onSubscoreHover,
 }: {
   system: SystemData
   subscores: typeof systemSubscores['alpha']
@@ -372,6 +414,7 @@ function DrillDownPanel({
   onInvariantSelect: (inv: Invariant) => void
   onBackToGlyph: () => void
   onBackToInvariants: () => void
+  onSubscoreHover?: (subscore: Subscore | null) => void
 }) {
   if (!selectedDimension) {
     return (
@@ -431,6 +474,7 @@ function DrillDownPanel({
           fromDimension={selectedDimension}
           subscores={subscores}
           currentDay={currentDay}
+          onSubscoreHover={onSubscoreHover}
         />
       )}
     </div>

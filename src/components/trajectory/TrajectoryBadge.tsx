@@ -6,6 +6,7 @@
  */
 
 import type { TrajectoryType, ContractionMode } from '../../data/synthetic/types'
+import { ContractionIconGrid } from '../contraction'
 
 export interface TrajectoryBadgeProps {
   /** Trajectory classification */
@@ -192,36 +193,17 @@ export function TrajectoryPanel({
         </div>
       </div>
 
-      {/* Active contraction modes */}
-      {contractionModes.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-white/10">
-          <div className="text-white/40 text-xs uppercase tracking-wide mb-2">
-            Active Contraction Modes
-          </div>
-          <div className="space-y-1">
-            {contractionModes.map((mode) => {
-              const modeConfig = CONTRACTION_MODE_CONFIG[mode]
-              return (
-                <div
-                  key={mode}
-                  className="flex items-center gap-2 text-white/60 text-sm"
-                >
-                  <span className="text-white/40">{modeConfig.icon}</span>
-                  <span>{modeConfig.label}</span>
-                </div>
-              )
-            })}
-          </div>
+      {/* Active contraction modes with animated icons */}
+      <div className="mt-4 pt-3 border-t border-white/10">
+        <div className="text-white/40 text-xs uppercase tracking-wide mb-3">
+          Contraction Modes
         </div>
-      )}
-
-      {contractionModes.length === 0 && (
-        <div className="mt-4 pt-3 border-t border-white/10">
-          <div className="text-white/30 text-sm">
-            No active contraction modes
-          </div>
-        </div>
-      )}
+        <ContractionIconGrid
+          activeModes={contractionModes}
+          size={28}
+          showLabels={true}
+        />
+      </div>
     </div>
   )
 }

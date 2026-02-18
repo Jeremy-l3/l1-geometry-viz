@@ -117,17 +117,25 @@ A note on terminology: "invariant" here means a property that characterizes the 
 
 ### 4.1 The invariants
 
-**Redundancy** — the degree to which the system's capacity to reach future states is distributed across multiple independent structures, pathways, or mechanisms. High redundancy means that the failure of any single component does not contract the manifold proportionally — other components can sustain reachability. Low redundancy means the manifold's geometry depends critically on specific components.
+**Redundancy** — the degree to which the system's capacity to reach future states is distributed across multiple structures, pathways, or mechanisms **with diverse perturbation-response profiles**. High redundancy means that the failure of any single component does not contract the manifold proportionally — other components can sustain reachability — **and that those components fail differently under the same perturbation**. Low redundancy means the manifold's geometry depends critically on specific components, or that nominally distinct pathways share a common failure mode.
 
-*Geometric role:* Redundancy determines how *localized* contraction events remain. In a high-redundancy system, perturbation that disables one pathway does not cascade because alternative pathways preserve manifold connectivity. Redundancy is a buffer against topological fragmentation and cascading deformation.
+The distinction between independence and diversity is structural: ten identical servers are independent of each other but not independent of the same perturbation. They collapse together under any failure mode they share. Redundancy that buffers against topological fragmentation must be *perturbation-diverse*, not merely replicated.
 
-**Connectivity density** — the richness and distribution of couplings within the system. This is not simply "how connected" the system is — it is the structure of that connectivity. A system can be densely connected in ways that distribute perturbation (resilient mesh) or in ways that transmit it (contagion network). What matters is the interaction between connectivity and perturbation coupling.
+*Geometric role:* Redundancy determines how *localized* contraction events remain **and whether localization holds under perturbation-specific stress**. In a high-redundancy system, perturbation that disables one pathway does not cascade because alternative pathways preserve manifold connectivity *and respond to the same perturbation through structurally different mechanisms*. Redundancy is a buffer against topological fragmentation and cascading deformation — but only when the redundant structures have diverse perturbation-response profiles.
 
-*Geometric role:* Connectivity density determines the *propagation geometry* of deformation. It shapes whether perturbation at one point in the system dissipates across many connections (diffusion) or concentrates along specific pathways (channeling). The same density can produce opposite effects depending on its structure — this is why connectivity must be understood as a topology, not a metric.
+*Basis for refinement:* Elmqvist et al. (2003) Response Diversity; Stirling (2007) Variety-Balance-Disparity; Biggs et al. (2020) Functional Redundancy. The domain examples in Section 4.2 and Artifact 3 already require this reading — species that fill the same niche but respond differently to fire, liquidity sources that react differently to the same market shock. The refinement makes explicit what the examples already demand.
 
-**Feedback latency** — the time delay between a perturbation acting on the system and the system's response dynamics engaging. Short feedback latency means the system begins restoring, absorbing, or (in pathological cases) amplifying quickly. Long feedback latency means perturbation accumulates before response begins — deformation progresses unchecked during the delay.
+**Connectivity density** — the richness, distribution, **and compartmentalization** of couplings within the system. This is not simply "how connected" the system is — it is the structure of that connectivity. A system can be densely connected in ways that distribute perturbation (resilient mesh) or in ways that transmit it (contagion network). What matters is the interaction between connectivity and perturbation coupling — **and whether the coupling topology contains modular boundaries that localize deformation within subsystems**.
 
-*Geometric role:* Feedback latency determines the *temporal depth* of deformation. A system with short latency and strong restoring dynamics may experience surface perturbation but never deep manifold deformation. A system with long latency may appear stable for extended periods while perturbation silently reshapes the manifold — then respond too late, when deformation has become structural.
+*Geometric role:* Connectivity density determines the *propagation geometry* of deformation **and whether that propagation stays local or goes global**. It shapes whether perturbation at one point in the system dissipates across many connections (diffusion), concentrates along specific pathways (channeling), **or is contained within a modular compartment before reaching the broader system**. The same density can produce opposite effects depending on its structure — this is why connectivity must be understood as a topology, not a metric. Two systems with identical coupling density can have opposite risk profiles if one has modular compartmentalization and the other does not: the first localizes failure, the second transmits it.
+
+*Basis for refinement:* Simon (1962) Nearly Decomposable Systems; Newman (2006) Modularity and Community Structure; May (1972) ecosystem stability; Haldane & May (2011) systemic financial risk. The original definition already noted that "the same density can produce opposite effects" but did not name the geometric property that explains why. That property is modularity — compartmental boundaries within the coupling topology. The refinement names what was already implied.
+
+**Feedback latency** — the time delay **and gain polarity** of the system's response dynamics relative to perturbation. Latency determines *when* response dynamics engage. **Gain polarity determines *what* those dynamics do once engaged: whether they restore the manifold toward its prior geometry (negative feedback / restoring gain) or amplify the deformation already in progress (positive feedback / amplifying gain).** Short feedback latency means the system begins responding quickly. Long feedback latency means perturbation accumulates before response begins. But latency alone is half the picture — a fast positive feedback loop is more dangerous than a slow negative one.
+
+*Geometric role:* Feedback latency determines the *temporal depth* of deformation. **Gain polarity determines the *trajectory* of deformation once response engages.** A system with short latency and **restoring** gain (negative feedback) may experience surface perturbation but never deep manifold deformation. A system with long latency may appear stable for extended periods while perturbation silently reshapes the manifold — then respond too late, when deformation has become structural. **A system with short latency but amplifying gain (positive feedback) responds quickly but accelerates contraction — liquidation cascades, bank runs, and cytokine storms are all fast positive feedback loops where rapid engagement makes the deformation worse, not better.** The combination of latency and gain polarity together determine whether response dynamics heal or accelerate manifold contraction.
+
+*Basis for refinement:* Meadows (2008) Leverage Points; Scheffer (2009) Critical Transitions; Sornette (2003) positive feedback cascades; Brunnermeier & Pedersen (2009) margin/liquidity spirals. The original definition mentioned "amplifying" in a parenthetical but treated it as an edge case rather than a structural parameter. Gain polarity is not an edge case — it is half of what determines the deformation trajectory.
 
 **Regeneration rate** — the rate at which the system can restore or expand its reachable state manifold after contraction. This is not the same as restoring dynamics (which prevent contraction during perturbation); regeneration is the capacity to recover manifold geometry *after* deformation has occurred.
 
@@ -145,9 +153,9 @@ Beneath them sit domain-specific *indicators*: measurable quantities that serve 
 
 | Invariant | Example indicators (token network) | Example indicators (forest ecosystem) |
 |---|---|---|
-| Redundancy | Number of independent liquidity sources; distribution of validator nodes | Species diversity; functional group overlap |
-| Connectivity density | Wallet interaction graph structure; cross-protocol dependency map | Mycorrhizal network density; trophic web structure |
-| Feedback latency | Time between governance proposal and execution; oracle update frequency | Seed germination lag; predator-prey response time |
+| Redundancy | Diversity of liquidity sources with distinct perturbation-response profiles (not just count); validator distribution across hardware/software stacks | Species diversity weighted by response-group heterogeneity; functional group overlap across disturbance types (fire, drought, pest) |
+| Connectivity density | Wallet interaction graph structure; cross-protocol dependency map; **modular compartmentalization of DeFi integrations (e.g., isolated relay chains, DEX/CEX separation)** | Mycorrhizal network density and modularity by tree species cluster; trophic web structure **with compartment boundaries between subsystems** |
+| Feedback latency | Time between governance proposal and execution; oracle update frequency; **gain polarity of automatic mechanisms (e.g., liquidation cascades = amplifying; dynamic fee adjustment = restoring)** | Seed germination lag; predator-prey response time; **feedback polarity (e.g., invasive species regrowth = amplifying; native recolonization = restoring)** |
 | Regeneration rate | Speed of liquidity recovery after drawdown; new contributor onboarding rate | Regrowth rate post-disturbance; soil recovery cycle |
 | Dependency concentration | Share of TVL in top 3 pools; reliance on single oracle provider | Keystone species dependency; watershed reliance on single water source |
 
@@ -212,3 +220,19 @@ The claim that L2 must validate (in Artifact 4) is that the operational triad em
 - **Containment** as a projection of the response dynamics R — the strength and speed of restoring forces, the depth of redundancy buffers, the capacity to absorb or adapt rather than deform or cascade
 
 If this derivation succeeds, the triad stops being three categories chosen for operational convenience and becomes three natural dimensions of a deeper geometry — three views of the same underlying shape. That is what Artifact 4 must demonstrate.
+
+---
+
+## Changelog
+
+**February 2026 — L1 Invariant Refinements (from Five Invariants Changes Proposal)**
+
+Three invariants refined to make implicit requirements explicit. No new invariants added. No downstream logic (L0, L2, L3, L4) disrupted.
+
+- **Redundancy:** "multiple independent structures" → "multiple structures with diverse perturbation-response profiles." Independence from each other is necessary but insufficient; independence from the same failure mode is what the examples and literature require.
+- **Connectivity Density:** "richness and distribution of couplings" → "richness, distribution, and compartmentalization of couplings." Adds modularity as the named geometric property that explains why identical density can produce opposite risk profiles.
+- **Feedback Latency:** "time delay between perturbation and response dynamics engaging" → "time delay and gain polarity of response dynamics." Adds polarity (restoring vs. amplifying) as a structural parameter co-equal with temporal delay.
+
+Indicator table (S4.2) updated to reflect refined definitions. Regeneration Rate and Dependency Concentration unchanged.
+
+*Sources:* Elmqvist et al. (2003); Stirling (2007); Biggs et al. (2020); Simon (1962); Newman (2006); May (1972); Haldane & May (2011); Meadows (2008); Scheffer (2009); Sornette (2003); Brunnermeier & Pedersen (2009).

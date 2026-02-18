@@ -26,7 +26,13 @@ A subscore is morphological if and only if it satisfies three conditions:
 
 The subscore must measure something that maps onto one or more of the five L1 invariants: redundancy, connectivity density, feedback latency, regeneration rate, or dependency concentration. This is the minimum structural requirement. A metric that does not track any invariant — however useful it may be — is not measuring risk shape. It may be measuring something correlated with risk shape, but the correlation is ungrounded and may break under novel conditions.
 
-*Test:* For any proposed subscore, ask: "Which invariant does this track, and through what domain-specific indicator?" If the answer is clear and defensible, the subscore passes Condition A. If it requires tortured reasoning to connect the metric to an invariant, it fails.
+**The February 2026 invariant refinements sharpen what "tracks" means for three invariants:**
+
+- **Redundancy:** A subscore that counts pathways or sources without assessing their perturbation-response diversity is tracking nominal redundancy, not morphological redundancy. The test is not "how many liquidity sources?" but "how many liquidity sources that would react differently to the same shock?" Count-only redundancy metrics fail the refined Condition A.
+- **Connectivity density:** A subscore that measures coupling richness without assessing compartmentalization is tracking only half the invariant. The test is not just "how densely connected?" but "how densely connected, and is that connectivity modular or monolithic?" Density-only connectivity metrics are incomplete under the refined Condition A.
+- **Feedback latency:** A subscore that measures response speed without assessing gain polarity is tracking only half the invariant. The test is not just "how fast does the system respond?" but "how fast, and does the response restore or amplify?" Speed-only feedback metrics are incomplete under the refined Condition A.
+
+*Test:* For any proposed subscore, ask: "Which invariant does this track, and through what domain-specific indicator? Does it capture the full invariant as refined, or only a partial dimension?" If the answer is clear and defensible — including the perturbation-diversity, compartmentalization, or gain polarity dimension where relevant — the subscore passes Condition A. If it requires tortured reasoning to connect the metric to an invariant, or if it captures only the count/speed dimension without the diversity/modularity/polarity dimension, it fails or requires augmentation.
 
 **Condition B: It measures a relational dynamic, not a static attribute.**
 
@@ -36,11 +42,13 @@ L1 describes risk as the geometry of systems in motion — manifolds evolving, p
 
 | Static attribute (conventional) | Relational dynamic (morphological) |
 |---|---|
-| Team size | How governance decisions propagate through stakeholder networks |
+| Team size | How governance decisions propagate through stakeholder networks **(connectivity density + compartmentalization)** |
 | Token supply | Liquidity flow concentration and migration patterns |
-| Number of audits completed | How quickly the protocol can detect and respond to exploits |
-| TVL | Distribution of TVL across independent venues and its sensitivity to correlated withdrawal |
+| Number of audits completed | How quickly the protocol can detect and respond to exploits, **and whether response restores or amplifies (feedback latency + gain polarity)** |
+| TVL | Distribution of TVL across venues **with diverse perturbation-response profiles** and its sensitivity to correlated withdrawal **(redundancy as perturbation-diversity, not count)** |
 | Market cap | The dependency structure of market cap on specific liquidity sources |
+| Number of liquidity sources | **Whether liquidity sources react differently to the same market shock (perturbation-diverse redundancy vs. nominal redundancy)** |
+| Response time to incidents | **Response speed + whether automatic mechanisms restore equilibrium or trigger cascading liquidation (gain polarity)** |
 
 The left column measures what the system *has*. The right column measures how the system *behaves* — how relationships propagate, concentrate, respond, and evolve. Only the right column tracks L1 geometry.
 
@@ -74,7 +82,7 @@ A token's risk output must always include at least three values — one per tria
 
 **Constraint 2: Within each triadic dimension, the invariant contributions should be distinguishable.**
 
-A containment score of 0.7 could arise from strong redundancy with weak feedback latency, or from weak redundancy with strong feedback latency. These represent structurally different containment configurations — the first system handles component failure well but responds slowly to novel threats; the second responds quickly but has no backup if the response fails. If the combination logic within each triadic dimension collapses these into a single number, the invariant-level shape is lost.
+A containment score of 0.7 could arise from strong redundancy with weak feedback latency, or from weak redundancy with strong feedback latency. These represent structurally different containment configurations — the first system handles component failure well but responds slowly to novel threats; the second responds quickly but has no backup if the response fails. **The refinements introduce a further structural distinction: a containment score arising from fast *restoring* feedback is fundamentally different from one that appears similar but includes fast *amplifying* feedback partially offset by strong redundancy. The first configuration is genuinely resilient; the second is a system where two structural forces are in tension — and that tension may resolve catastrophically if the redundancy erodes. Gain polarity and perturbation-diversity must be distinguishable within the invariant profile, not collapsed into the same containment number.** If the combination logic within each triadic dimension collapses these into a single number, the invariant-level shape is lost.
 
 The practical recommendation: the primary output is the triadic profile (three values). The secondary output, available on inspection, is the invariant profile within each dimension (showing how the triadic score was composed). This preserves shape at two resolutions without overwhelming users who need only the triadic view.
 
@@ -122,7 +130,9 @@ Validation has two layers, corresponding to two claims every morphological subsc
 
 **Layer 1: Does the indicator track the invariant?**
 
-Every subscore measures a domain-specific indicator that is claimed to track a morphological invariant. This claim is empirically testable. If a subscore claims to measure redundancy (via, say, "distribution of TVL across independent venues"), then the indicator should correlate with observed resilience under conditions where redundancy is the relevant structural property.
+Every subscore measures a domain-specific indicator that is claimed to track a morphological invariant. This claim is empirically testable. If a subscore claims to measure redundancy (via, say, "distribution of TVL across venues with diverse perturbation-response profiles"), then the indicator should correlate with observed resilience under conditions where redundancy is the relevant structural property.
+
+**The refinement sharpens the validation target: a redundancy indicator that counts venues without assessing their perturbation-response diversity may correlate with resilience in normal conditions (when perturbations are uncorrelated) but fail under correlated stress events (when all venues sharing the same response profile collapse together). The validation must specifically test under perturbation-correlated conditions — which is precisely when the diversity dimension of redundancy is load-bearing.**
 
 The validation method: identify historical events where the invariant was structurally relevant (for redundancy: events where a major liquidity venue failed or withdrew), and test whether the indicator's prior value predicted the system's response. If tokens with high indicator values weathered the event better (less manifold contraction, faster recovery) than tokens with low values, the indicator is tracking the invariant. If not, the indicator is measuring something else — possibly something correlated in normal conditions but divergent under stress.
 
@@ -138,7 +148,7 @@ The validation method: across a population of rated tokens, test whether the inv
 
 **Catalog stress events.** Maintain a registry of historical events that activated specific risk dynamics — liquidity crises, governance failures, oracle malfunctions, contagion cascades, regulatory actions. For each event, characterize which invariants were structurally relevant and which triadic dimensions were impacted.
 
-**Retrospective testing.** For each event, compare pre-event subscore values with observed outcomes. Did high-redundancy tokens survive better? Did low-feedback-latency protocols respond faster? Did the triadic profiles predict the pattern of impact?
+**Retrospective testing.** For each event, compare pre-event subscore values with observed outcomes. Did high-redundancy tokens survive better — **and specifically, did tokens with perturbation-diverse redundancy survive better than those with mere count-based redundancy when the perturbation was correlated?** Did low-feedback-latency protocols respond faster — **and did the gain polarity of their response dynamics (restoring vs. amplifying) predict whether fast response helped or hurt?** Did tokens with compartmentalized connectivity contain deformation locally while those with monolithic connectivity transmitted it? Did the triadic profiles predict the pattern of impact?
 
 **Prospective monitoring.** As new stress events occur, test in real time whether subscore values are predictive. This builds the validation corpus continuously and surfaces subscore failures quickly.
 
@@ -172,9 +182,9 @@ The optimization market should be instrumented to produce protocol-level risk me
 
 | Protocol-level metric | What it measures | L1 invariant it tracks |
 |---|---|---|
-| Vouch diversity index | Distribution of conviction across subscores | Redundancy (of the protocol's epistemic base) |
-| Participation breadth | Number and distribution of active vouchers | Connectivity density (of the protocol's sensing network) |
-| Conviction flow velocity | Rate of conviction migration between subscores | Feedback latency (of the protocol's quality-sensing mechanism) |
+| Vouch diversity index | Distribution of conviction across subscores **weighted by perturbation-response diversity of the subscores themselves** (do vouched subscores cover diverse failure modes, or are they all sensitive to the same methodological blind spot?) | Redundancy (of the protocol's epistemic base) — **perturbation-diverse, not merely distributed** |
+| Participation breadth **+ modularity** | Number and distribution of active vouchers; **whether vouching clusters form modular communities or a single tightly-coupled network** | Connectivity density **+ compartmentalization** (of the protocol's sensing network) |
+| Conviction flow velocity **+ direction** | Rate of conviction migration between subscores; **whether conviction flows restore equilibrium (negative feedback — conviction flows toward undervalued subscores) or amplify concentration (positive feedback — conviction piles into already-dominant subscores)** | Feedback latency **+ gain polarity** (of the protocol's quality-sensing mechanism) |
 | Formation pipeline depth | Number of vouchers developing toward Author/Improver/Challenger eligibility | Regeneration rate (of the protocol's institutional capacity) |
 | Conviction concentration ratio | Share of total conviction held by top N vouchers or directed at top N subscores | Dependency concentration (of the protocol's epistemic infrastructure) |
 
@@ -208,7 +218,11 @@ A conventional system validates by checking whether its scores correlate with ou
 
 **5. The framework can generate novel predictions that conventional models cannot.**
 
-This is the ultimate test. If the morphological framework produces the same assessments as a conventional model in every case, it adds vocabulary but not insight. The framework earns its claim to novelty when it identifies risk shapes that conventional models miss — particularly: systems with good conventional metrics on degenerative trajectories (the "quiet narrowing" that precedes acute failure), systems with poor conventional metrics on regenerative trajectories (undervalued resilience), and systems where P-dominance from composability exposure creates risk that is invisible to any model that only examines the system in isolation.
+This is the ultimate test. If the morphological framework produces the same assessments as a conventional model in every case, it adds vocabulary but not insight. The framework earns its claim to novelty when it identifies risk shapes that conventional models miss — particularly: systems with good conventional metrics on degenerative trajectories (the "quiet narrowing" that precedes acute failure), systems with poor conventional metrics on regenerative trajectories (undervalued resilience), and systems where P-dominance from composability exposure creates risk that is invisible to any model that only examines the system in isolation. **The February 2026 refinements generate three additional classes of novel prediction that count-based conventional models cannot produce:**
+
+- **Nominal-redundancy traps:** Systems with high pathway count but low perturbation-response diversity — appearing well-diversified by conventional metrics but structurally fragile under correlated perturbation. Only a framework that distinguishes count from diversity can identify these.
+- **Compartmentalization advantages:** Systems with moderate aggregate connectivity but modular topology — appearing less connected by conventional density metrics but structurally more resilient because deformation stays local. Only a framework that captures modularity can identify these.
+- **Gain polarity reversals:** Systems with fast response dynamics that conventional models score as "high containment" but that are actually accelerating contraction through positive feedback loops. Only a framework that distinguishes restoring from amplifying feedback can identify these — and they are among the most dangerous risk configurations because they *look good* by speed metrics alone.
 
 ### Where we are now (an honest assessment template):
 
@@ -227,11 +241,12 @@ For reference, here are the binding constraints that the ontological stack place
 - The identity boundary is observer-relative. Every subscore implicitly adopts a level of description (this token, this protocol, this ecosystem). That choice should be explicit and consistent within a rating.
 
 ### From L1 (Topological Risk):
-- Subscores must track morphological invariants through domain-specific indicators (Condition A).
+- Subscores must track morphological invariants through domain-specific indicators (Condition A). **The February 2026 refinements impose additional specificity: redundancy subscores must capture perturbation-response diversity (not just pathway count); connectivity density subscores must capture compartmentalization (not just coupling richness); feedback latency subscores must capture gain polarity (not just response speed). Count-only and speed-only metrics are insufficient under the refined Condition A.**
 - Subscores must measure relational dynamics, not static attributes (Condition B).
 - Risk shape has four distinct contraction modes (volume, dimensional collapse, topological fragmentation, curvature steepening). The subscore registry should, in aggregate, be capable of detecting all four — not just the most easily measured.
-- In composable systems, perturbation-field indicators (cross-protocol dependency, contagion pathway structure) may be more important than internal manifold indicators. Subscore weighting should reflect this.
+- In composable systems, perturbation-field indicators (cross-protocol dependency, contagion pathway structure) may be more important than internal manifold indicators. Subscore weighting should reflect this. **Compartmentalization of composability integrations is a key connectivity density indicator in these systems.**
 - Temporal trajectory is constitutive of risk topology. Invariant time series, trajectory classification, and trajectory presentation are architectural requirements, not optional features.
+- **Gain polarity is a first-class architectural concern. Subscore design for feedback-related invariants must distinguish restoring dynamics (negative feedback) from amplifying dynamics (positive feedback). A protocol with fast amplifying feedback is structurally more dangerous than one with slow restoring feedback — any containment model that treats both as "short feedback latency" is losing critical information.**
 
 ### From L2 (The Derivation Bridge):
 - Each subscore must contribute to the operational triad through a specifiable invariant-triadic pathway (Condition C).
@@ -249,3 +264,22 @@ For reference, here are the binding constraints that the ontological stack place
 
 ### From the derivation assessment:
 - The framework's capacity to support multiple projections (triads, or other-adics) from L1 is a latent structural feature. The probability-impact-containment triad is the first and primary projection; others may be developed as domains demand them.
+
+---
+
+## Changelog
+
+**February 2026 — L1 Invariant Refinement Integration**
+
+Engineering constraints updated to reflect refined invariant definitions from Artifact 2 (S4.1). The proposal's L4 flag — "Count-only metrics become insufficient for Redundancy and Connectivity; Feedback subscores need polarity, not just speed" — is now explicit throughout.
+
+Key updates:
+- **Condition A test (Section 2):** Now specifies that redundancy subscores must capture perturbation-response diversity, connectivity subscores must capture compartmentalization, and feedback subscores must capture gain polarity. Count-only and speed-only metrics are flagged as insufficient.
+- **Static vs. relational table (Section 2):** Two rows added; existing rows enriched with refined invariant vocabulary.
+- **Constraint 2 example (Section 3):** Expanded to show how gain polarity and perturbation-diversity create structural distinctions within the same containment score.
+- **Validation framework (Section 5):** Redundancy example updated to perturbation-diverse formulation; retrospective testing questions sharpened for all three refined invariants.
+- **Protocol meta-metrics (Section 6):** Redundancy, connectivity, and feedback rows enriched with diversity, modularity, and polarity dimensions.
+- **Summary L1 constraints (Section 8):** New bullet on gain polarity as first-class architectural concern; existing bullets enriched.
+- **Genuinely morphological test (Section 7):** Three novel prediction classes added (nominal-redundancy traps, compartmentalization advantages, gain polarity reversals).
+
+No structural arguments changed. All updates are downstream consequences of the L1 refinements.

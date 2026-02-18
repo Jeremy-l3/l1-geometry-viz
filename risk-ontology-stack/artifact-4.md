@@ -6,7 +6,7 @@
 
 ## 1. What This Artifact Must Demonstrate
 
-L1 describes risk as the geometry of state-space contraction: the reachable state manifold M(t), the perturbation field P, and the response dynamics R, characterized by five morphological invariants and four modes of contraction.
+L1 describes risk as the geometry of state-space contraction: the reachable state manifold M(t), the perturbation field P, and the response dynamics R, characterized by five morphological invariants — redundancy (perturbation-diverse structural buffers), connectivity density (propagation geometry and compartmentalization), feedback latency (temporal delay and gain polarity of response), regeneration rate, and dependency concentration — and four modes of contraction.
 
 L2 — the operational layer — is Simon's triadic definition: risk as the dynamic relationship between the likelihood of an uncertain event (probability), the severity of its potential impact (impact), and the capacity of the system to contain or absorb that impact (containment).
 
@@ -62,7 +62,7 @@ Probability collapses the internal geometry of P (losing correlation structure a
 
 ### Morphological invariants most relevant to probability
 
-**Connectivity density** — determines how perturbation propagates through the system and therefore which trajectories become accessible under P. High connectivity with contagion structure amplifies the probability of correlated contraction events.
+**Connectivity density** — determines how perturbation propagates through the system and therefore which trajectories become accessible under P. High connectivity with contagion structure amplifies the probability of correlated contraction events. **Compartmentalization modulates this: a system with modular coupling topology may have high aggregate connectivity but lower probability of system-wide contraction events, because modular boundaries limit which trajectories P can activate across the full manifold.**
 
 **Dependency concentration** — determines whether the likely contraction trajectories are concentrated around a few critical points (making specific events highly probable) or distributed across the manifold (making any specific event less probable but the aggregate probability of *some* contraction higher).
 
@@ -98,11 +98,11 @@ Impact collapses the trajectory information (losing how the system arrived at th
 
 ### Morphological invariants most relevant to impact
 
-**Redundancy** — determines whether perturbation produces localized or systemic deformation. High redundancy buffers impact; low redundancy amplifies it. A system with no redundancy in a critical function experiences maximal impact from perturbation to that function.
+**Redundancy** — determines whether perturbation produces localized or systemic deformation. High redundancy buffers impact; low redundancy amplifies it. A system with no redundancy in a critical function experiences maximal impact from perturbation to that function. **The perturbation-diversity refinement sharpens this: redundancy buffers impact only when the redundant structures have diverse perturbation-response profiles. Nominal redundancy (multiple pathways with identical failure modes) provides no impact buffer against the shared failure mode — all pathways deform simultaneously under the same perturbation, producing systemic rather than localized impact.**
 
 **Dependency concentration** — determines the *criticality profile*: which perturbation targets produce disproportionate deformation? High dependency concentration means impact is highly uneven — most perturbations produce modest deformation, but perturbation to the concentrated dependency produces catastrophic contraction. This is the geometric source of fat-tailed impact distributions.
 
-**Connectivity density** — determines whether deformation propagates or remains localized. Dense connectivity can either distribute impact (spreading deformation thinly across many components) or channel it (transmitting deformation along contagion pathways). The structure of connectivity, not just its density, determines which effect dominates.
+**Connectivity density** — determines whether deformation propagates or remains localized. Dense connectivity can either distribute impact (spreading deformation thinly across many components) or channel it (transmitting deformation along contagion pathways). The structure of connectivity, not just its density, determines which effect dominates. **Compartmentalization is the geometric property that explains which effect dominates: modular coupling topology contains deformation within subsystems (distributing effect), while monolithic coupling topology transmits deformation across the full system (channeling effect). Two systems with identical density but different modularity have structurally different impact profiles.**
 
 ---
 
@@ -122,9 +122,9 @@ But "less a compression" is not "no compression." The projection still involves 
 
 **From response mode spectrum to capacity scalar.** L1 distinguishes four response modes (restoring, absorbing, deforming, cascading). A real system's R is typically a mixture — some perturbations are absorbed, others produce deformation, still others trigger partial cascades that are then contained. Containment-as-operational-concept collapses this spectrum into a single dimension: how much disruption can the system handle before irreversible contraction occurs?
 
-**From temporal dynamics to capacity.** R is inherently temporal — it unfolds over time. Feedback latency, response speed, and the interaction between immediate response and long-term recovery are all part of R's structure. Containment collapses this temporal richness into a more static concept: *capacity* to absorb. This is a significant compression — a system with strong but slow response dynamics has a different R than one with moderate but fast dynamics, but they might receive similar containment ratings if the temporal structure is not preserved.
+**From temporal dynamics to capacity.** R is inherently temporal — it unfolds over time. Feedback latency, **gain polarity,** response speed, and the interaction between immediate response and long-term recovery are all part of R's structure. Containment collapses this temporal richness into a more static concept: *capacity* to absorb. This is a significant compression — a system with strong but slow response dynamics has a different R than one with moderate but fast dynamics, but they might receive similar containment ratings if the temporal structure is not preserved. **The compression is even more severe with gain polarity: a system with fast restoring feedback and a system with fast amplifying feedback both have "short feedback latency," but their containment capacities are opposite. Collapsing gain polarity into the containment scalar risks treating a fast positive feedback loop (which accelerates contraction) as equivalent to a fast negative feedback loop (which arrests it).**
 
-**From invariant-dependent dynamics to aggregate resilience.** R's strength depends on multiple morphological invariants — redundancy provides backup pathways, connectivity density determines propagation geometry, feedback latency determines response speed, regeneration rate determines recovery from deformation. Containment collapses these into a composite: the system's overall capacity to prevent perturbation from producing permanent contraction.
+**From invariant-dependent dynamics to aggregate resilience.** R's strength depends on multiple morphological invariants — redundancy provides perturbation-diverse backup pathways, connectivity density determines propagation geometry and compartmental containment, feedback latency determines response speed **and gain polarity determines whether that response restores or amplifies**, regeneration rate determines recovery from deformation. Containment collapses these into a composite: the system's overall capacity to prevent perturbation from producing permanent contraction.
 
 ### What the projection preserves
 
@@ -138,13 +138,13 @@ Containment collapses the specificity of R (which response modes are active, aga
 
 All five invariants contribute to containment, making it the most invariant-rich of the three triadic dimensions:
 
-**Redundancy** — provides alternative pathways when primary ones are disrupted, enabling restoring dynamics.
+**Redundancy** — provides alternative pathways when primary ones are disrupted, enabling restoring dynamics. **The perturbation-diversity requirement ensures these alternatives survive the same perturbation that disrupted the primary pathway — identical backup pathways fail simultaneously and provide no containment.**
 
-**Feedback latency** — determines how quickly R engages. Short latency means the system begins responding before deformation deepens.
+**Feedback latency and gain polarity** — latency determines how quickly R engages; **gain polarity determines whether R restores or amplifies once engaged.** Short latency with restoring gain means the system begins healing before deformation deepens. **Short latency with amplifying gain means the system accelerates contraction before any restoring dynamics can engage — this is the geometric signature of cascading failure (liquidation spirals, bank runs, rage-quit cascades).**
+
+**Connectivity density** — determines whether response dynamics can propagate corrective signals across the system (distributed resilience) or are isolated to local regions. **Compartmentalization further determines whether a localized containment success can protect the broader system: modular topology means that even if containment fails in one compartment, the failure does not automatically propagate to adjacent compartments.**
 
 **Regeneration rate** — determines whether the system can recover manifold geometry after deformation, not just resist it during perturbation.
-
-**Connectivity density** — determines whether response dynamics can propagate corrective signals across the system (distributed resilience) or are isolated to local regions.
 
 **Dependency concentration** — determines whether the system's response capacity is itself concentrated on critical components (making R vulnerable to the same perturbation that triggers contraction) or distributed.
 
@@ -168,9 +168,9 @@ Each triadic dimension draws on multiple invariants, and each invariant contribu
 
 | Invariant | Probability (branching/exposure) | Impact (deformation) | Containment (response) |
 |---|---|---|---|
-| Redundancy | Moderate: redundancy can buffer perturbation transmission, reducing effective exposure | High: determines whether deformation is localized or systemic | High: provides alternative pathways for restoring dynamics |
-| Connectivity density | High: determines perturbation propagation, shapes which trajectories are accessible | High: determines whether deformation propagates or remains local | High: determines whether response signals can propagate correctively |
-| Feedback latency | Low: latency affects response, not exposure | Low: latency affects response timing, not deformation geometry | High: determines temporal depth of unchecked deformation |
+| Redundancy | Moderate: perturbation-diverse redundancy buffers perturbation transmission, reducing effective exposure; nominal redundancy (identical response profiles) provides no buffer against shared failure modes | High: determines whether deformation is localized or systemic; only perturbation-diverse redundancy prevents simultaneous failure | High: provides perturbation-diverse alternative pathways for restoring dynamics; identical backups fail together and provide no containment |
+| Connectivity density | High: determines perturbation propagation and which trajectories are accessible; compartmentalization limits which contraction events can become system-wide | High: determines whether deformation propagates or remains local; modular topology contains deformation within subsystems | High: determines whether response signals can propagate correctively; compartmentalization can protect the broader system from localized containment failures |
+| Feedback latency + gain polarity | Low: latency and gain polarity affect response, not exposure | Moderate: gain polarity affects whether response dynamics amplify or limit deformation depth once engaged | High: latency determines temporal depth of unchecked deformation; gain polarity determines whether response restores or accelerates contraction |
 | Regeneration rate | Low: regeneration is post-contraction, not pre-event | Moderate: high regeneration means deformation is more reversible | High: determines recovery capacity after deformation |
 | Dependency concentration | High: concentrated dependencies create high-probability contraction pathways | High: concentrated dependencies create disproportionate deformation | High: concentrated response capacity creates fragile containment |
 
@@ -251,7 +251,7 @@ An identity-preserving dynamical system with branching future trajectories embed
 *Domain-general. Ethically neutral. Framework-independent.*
 
 ### Layer 1 — Topological Risk
-State-space contraction characterized by manifold geometry (M), perturbation dynamics (P), and response dynamics (R). Five morphological invariants define risk shape. Four contraction modes describe how manifolds deform.
+State-space contraction characterized by manifold geometry (M), perturbation dynamics (P), and response dynamics (R). Five morphological invariants define risk shape: redundancy (perturbation-diverse structural buffers), connectivity density (propagation geometry and compartmentalization), feedback latency and gain polarity (temporal depth and trajectory of response), regeneration rate (reversibility of contraction), and dependency concentration (criticality profile). Four contraction modes describe how manifolds deform.
 *Domain-general. Ethically neutral. Measurable in principle.*
 
 ### Layer 2 — Operational Risk (The Triad)
@@ -282,8 +282,24 @@ Each layer depends only on the layers beneath it. No layer requires the layers a
 
 ### What the derivation reveals that was not visible before
 
-**The many-to-many relationship between invariants and triadic dimensions.** This has direct engineering consequences: subscores should not be forced into single triadic buckets, because the invariants they measure contribute across dimensions.
+**The many-to-many relationship between invariants and triadic dimensions.** This has direct engineering consequences: subscores should not be forced into single triadic buckets, because the invariants they measure contribute across dimensions. **The February 2026 invariant refinements sharpen this mapping: redundancy's contribution to all three dimensions depends on perturbation-diversity (not just pathway count); connectivity density's contribution depends on compartmentalization (not just coupling richness); feedback latency's contribution — especially to containment — depends on gain polarity (not just response speed). These refinements make the many-to-many mapping more precise without changing its structure.**
 
 **The entry point of normative content.** The impact projection is where values enter the framework. Making this explicit transforms "impact assessment" from a seemingly objective measurement into a transparent normative choice — which is methodologically stronger, not weaker.
 
 **The structural reason why averaging destroys information.** The three triadic dimensions are projections of independent geometric sources. Averaging across them collapses independent axes — the geometric equivalent of averaging a map's latitude and longitude into a single coordinate. The result is not a simpler position; it is no position at all.
+
+---
+
+## Changelog
+
+**February 2026 — L1 Invariant Refinement Integration**
+
+Language updated to reflect refined invariant definitions from Artifact 2 (S4.1). No derivation logic changed. All invariant-to-triad mappings hold as before; the refinements explain existing contributions with greater precision.
+
+Key updates:
+- **Redundancy** references throughout now specify perturbation-diversity as the condition for effective buffering of probability, impact, and containment.
+- **Connectivity density** references now include compartmentalization as the geometric property determining propagation vs. containment of deformation.
+- **Feedback latency** references now include gain polarity; the containment derivation explicitly identifies the compression risk of collapsing restoring and amplifying feedback into a single latency metric. The many-to-many table upgrades Feedback's Impact contribution from Low to Moderate, reflecting gain polarity's direct effect on deformation depth.
+- The many-to-many mapping table (Section 6) updated with refined language and the Feedback Latency row renamed to "Feedback latency + gain polarity."
+
+No downstream impact on L3 or L4. The derivation assessment (Section 10) remains: the triad falls out naturally from L1.
